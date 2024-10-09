@@ -14,6 +14,7 @@ export const useIPsStore = defineStore('ips', () => {
   const elements = ref<Array<TTable>>([]);
   const foundElements = ref<Array<TTable>>(elements.value);
   const query = toRef(useRoute(), 'query');
+  const inputValue = ref('');
   const { push } = useRouter();
 
   const getIps = async (data: string) => {
@@ -32,7 +33,6 @@ export const useIPsStore = defineStore('ips', () => {
           region: data.region,
           country: data.country,
         }));
-      console.log(result);
       elements.value.push(...prepareResult);
     } catch (error) {
       console.error(error);
@@ -58,10 +58,15 @@ export const useIPsStore = defineStore('ips', () => {
     }
   });
 
+  onMounted(() => {
+    inputValue.value = Array.from(currentIps.value).join('\n');
+  });
+
   return {
     currentIps,
     elements,
     foundElements,
+    inputValue,
     getIps,
     search,
     removeElement,
